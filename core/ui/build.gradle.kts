@@ -4,7 +4,7 @@ plugins {
 }
 
 android {
-    namespace = "ru.ifedorov.courses"
+    namespace = "ru.ifedorov.ui"
     compileSdk {
         version = release(36) {
             minorApiLevel = 1
@@ -13,6 +13,8 @@ android {
 
     defaultConfig {
         minSdk = 33
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     compileOptions {
@@ -26,8 +28,6 @@ android {
 }
 
 dependencies {
-    implementation(project(":core:ui"))
-
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.ui)
