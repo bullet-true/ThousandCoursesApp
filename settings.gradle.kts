@@ -24,3 +24,7 @@ dependencyResolutionManagement {
 
 rootProject.name = "Thousand Courses"
 include(":app")
+include(":core:domain")
+include(":core:data")
+include(":core:database")
+include(":core:network")
