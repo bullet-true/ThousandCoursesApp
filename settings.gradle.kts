@@ -24,3 +24,11 @@ dependencyResolutionManagement {
 
 rootProject.name = "Thousand Courses"
 include(":app")
+include(":core:domain")
+include(":core:data")
+include(":core:database")
+include(":core:network")
+include(":feature:auth")
+include(":feature:courses")
+include(":feature:favorites")
+include(":core:ui")
