@@ -43,6 +43,7 @@ dependencies {
     implementation(project(":feature:auth"))
     implementation(project(":feature:courses"))
     implementation(project(":feature:favorites"))
+    implementation(project(":core:ui"))
 
     implementation(platform(libs.androidx.compose.bom))
     implementation(libs.androidx.activity.compose)
