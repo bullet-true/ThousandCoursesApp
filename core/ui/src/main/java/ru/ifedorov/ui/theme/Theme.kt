@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui.theme
+package ru.ifedorov.ui.theme
 
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme

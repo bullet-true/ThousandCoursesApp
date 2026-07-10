@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui.theme
+package ru.ifedorov.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
