@@ -8,7 +8,7 @@ val SurfaceVariantColor = Color(0xFF32333A) // фон полей ввода
 val PrimaryColor = Color(0xFF12B956) // основная кнопка
 val OnPrimaryColor = Color(0xFFF2F2F3) // текст поверх зеленого
 val OnBackgroundColor = Color(0xFFF2F2F3) // основной текст на черном фоне
-val OnSurfaceColor = Color(0xFFECECEF) // текст внутри корточек
+val OnSurfaceColor = Color(0xFFF2F2F3) // текст внутри корточек
 val OnSurfaceVariantColor = Color(0xFFAFAFB4) // вторичный текст
 
 val OutlineColor = Color(0xFF4D555E) // разделитель
