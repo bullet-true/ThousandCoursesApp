@@ -34,6 +34,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.ifedorov.ui.theme.OkButtonGradientEndColor
@@ -50,7 +51,11 @@ private val ButtonCornerRadius = 30.dp
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
-    onLoginClick: (email: String, password: String) -> Unit
+    onLoginClick: (email: String, password: String) -> Unit,
+    onRegistrationClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit,
+    onVkLoginClick: () -> Unit,
+    onOkLoginClick: () -> Unit,
 ) {
     val emailState = rememberTextFieldState()
     val passwordState = rememberTextFieldState()
@@ -105,7 +110,10 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LoginSupportLinks()
+        LoginSupportLinks(
+            onRegistrationClick = onRegistrationClick,
+            onForgotPasswordClick = onForgotPasswordClick
+        )
 
         Spacer(modifier = Modifier.height(32.dp))
 
@@ -116,7 +124,10 @@ fun LoginScreen(
 
         Spacer(modifier = Modifier.height(32.dp))
 
-        SocialButtons()
+        SocialButtons(
+            onVkLoginClick = onVkLoginClick,
+            onOkLoginClick = onOkLoginClick
+        )
     }
 }
 
@@ -193,13 +204,17 @@ private fun AuthButton(
 }
 
 @Composable
-private fun LoginSupportLinks() {
+private fun LoginSupportLinks(
+    onRegistrationClick: () -> Unit,
+    onForgotPasswordClick: () -> Unit
+) {
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Row(
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(2.dp)
         ) {
             Text(
                 text = stringResource(R.string.auth_no_account),
@@ -208,7 +223,11 @@ private fun LoginSupportLinks() {
             )
             Text(
                 text = stringResource(R.string.auth_registration),
-                modifier = Modifier.clickable(onClick = {}),
+                modifier = Modifier.clickable(
+                    onClick = {
+                        onRegistrationClick
+                    }
+                ),
                 color = MaterialTheme.colorScheme.primary,
                 style = MaterialTheme.typography.labelSmall
             )
@@ -218,7 +237,11 @@ private fun LoginSupportLinks() {
 
         Text(
             text = stringResource(R.string.auth_forgot_password),
-            modifier = Modifier.clickable(onClick = {}),
+            modifier = Modifier.clickable(
+                onClick = {
+                    onForgotPasswordClick
+                }
+            ),
             color = MaterialTheme.colorScheme.primary,
             style = MaterialTheme.typography.labelSmall
         )
@@ -226,7 +249,10 @@ private fun LoginSupportLinks() {
 }
 
 @Composable
-private fun SocialButtons() {
+private fun SocialButtons(
+    onVkLoginClick: () -> Unit,
+    onOkLoginClick: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(16.dp)
@@ -237,6 +263,7 @@ private fun SocialButtons() {
             background = Brush.horizontalGradient(
                 colors = listOf(VkButtonColor, VkButtonColor)
             ),
+            onClick = onVkLoginClick,
             modifier = Modifier.weight(1f),
         )
         SocialButton(
@@ -245,6 +272,7 @@ private fun SocialButtons() {
             background = Brush.horizontalGradient(
                 colors = listOf(OkButtonGradientStartColor, OkButtonGradientEndColor)
             ),
+            onClick = onOkLoginClick,
             modifier = Modifier.weight(1f),
         )
     }
@@ -255,11 +283,16 @@ private fun SocialButton(
     iconResId: Int,
     contentDescription: String,
     background: Brush,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Box(
         modifier = modifier
             .height(AuthComponentHeight)
+            .clickable(
+                onClick = onClick,
+                role = Role.Button
+            )
             .background(
                 brush = background,
                 shape = RoundedCornerShape(ButtonCornerRadius)
@@ -295,7 +328,11 @@ private fun AuthTextFieldColors(): TextFieldColors =
 private fun LoginScreenPreview() {
     ThousandCoursesTheme {
         LoginScreen(
-            onLoginClick = { _, _ -> }
+            onLoginClick = { _, _ -> },
+            onRegistrationClick = {},
+            onForgotPasswordClick = {},
+            onVkLoginClick = {},
+            onOkLoginClick = {}
         )
     }
 }
@@ -315,7 +352,10 @@ private fun AuthButtonPreview() {
 @Composable
 private fun LoginSupportLinksPreview() {
     ThousandCoursesTheme {
-        LoginSupportLinks()
+        LoginSupportLinks(
+            onRegistrationClick = {},
+            onForgotPasswordClick = {}
+        )
     }
 }
 
@@ -323,6 +363,9 @@ private fun LoginSupportLinksPreview() {
 @Composable
 private fun SocialButtonsPreview() {
     ThousandCoursesTheme {
-        SocialButtons()
+        SocialButtons(
+            onVkLoginClick = {},
+            onOkLoginClick = {}
+        )
     }
 }
