@@ -34,6 +34,9 @@ import androidx.compose.ui.unit.dp
 import ru.ifedorov.ui.R
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
+private const val FAVORITE_BUTTON_BACKGROUND_ALPHA = 0.3f
+private const val INFO_BADGE_BACKGROUND_ALPHA = 0.3f
+private const val COURSE_DESCRIPTION_ALPHA = 0.7f
 private val CardHeight = 236.dp
 private val CardImageHeight = 114.dp
 private val CardCornerRadius = 16.dp
@@ -50,9 +53,6 @@ private val InfoBadgeContentGap = 4.dp
 private val MoreDetailsIconSize = 16.dp
 private val ImagePlaceholderStartColor = Color(0xFFFF8A00)
 private val ImagePlaceholderEndColor = Color(0xFFFFC400)
-private const val FAVORITE_BUTTON_BACKGROUND_ALPHA = 0.3f
-private const val INFO_BADGE_BACKGROUND_ALPHA = 0.3f
-private const val COURSE_DESCRIPTION_ALPHA = 0.7f
 
 @Composable
 fun CourseCard(
