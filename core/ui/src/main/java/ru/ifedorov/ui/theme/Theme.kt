@@ -12,7 +12,8 @@ private val CoursesColorScheme = darkColorScheme(
     surface = SurfaceColor,
     onSurface = OnSurfaceColor,
     surfaceVariant = SurfaceVariantColor,
-    onSurfaceVariant = OnSurfaceVariantColor
+    onSurfaceVariant = OnSurfaceVariantColor,
+    outline = OutlineColor
 )
 
 @Composable
