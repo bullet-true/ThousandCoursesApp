@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="course_details_button">Подробнее</string>
+    <string name="course_add_to_favorites">Добавить курс в избранное</string>
+    <string name="course_remove_from_favorites">Удалить курс из избранного</string>
+</resources>
