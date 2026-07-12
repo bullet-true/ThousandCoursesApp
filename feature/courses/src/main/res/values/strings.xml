@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="courses_search_placeholder">Search courses...</string>
+    <string name="courses_filter_content_description">Фильтр курсов</string>
+    <string name="courses_sort_by_date">По дате добавления</string>
+</resources>

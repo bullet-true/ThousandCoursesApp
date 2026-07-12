@@ -276,7 +276,7 @@ private val previewCourse = CourseCardUiModel(
     price = "999 ₽",
     rating = "4.9",
     date = "22 Мая 2024",
-    isFavorite = false
+    isFavorite = true
 )
 
 @Preview(showBackground = true)
