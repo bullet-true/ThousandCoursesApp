@@ -1,21 +1,52 @@
 package ru.ifedorov.thousandcourses
 
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import ru.ifedorov.courses.CoursesScreen
+import ru.ifedorov.thousandcourses.ui.navigation.AppTab
+import ru.ifedorov.thousandcourses.ui.navigation.BottomBar
 import ru.ifedorov.ui.component.CourseCardUiModel
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
 @Composable
 fun ThousandCoursesApp() {
     ThousandCoursesTheme {
-        CoursesScreen(
-            courses = sample,
-            onFavoriteClick = {},
-            onDetailsClick = {},
-            onFilterClick = {},
-            onSortClick = {}
-        )
+        var selectedTab by rememberSaveable { mutableStateOf(AppTab.Home) }
+
+        Scaffold(
+            containerColor = MaterialTheme.colorScheme.background,
+            bottomBar = {
+                BottomBar(
+                    selectedTab = selectedTab,
+                    onTabClick = { tab -> selectedTab = tab }
+                )
+            }
+        ) { innerPadding ->
+            CoursesContent(innerPadding = innerPadding)
+        }
     }
+}
+
+@Composable
+private fun CoursesContent(
+    innerPadding: PaddingValues
+) {
+    CoursesScreen(
+        courses = sample,
+        modifier = Modifier.padding(innerPadding),
+        onFavoriteClick = {},
+        onDetailsClick = {},
+        onFilterClick = {},
+        onSortClick = {}
+    )
 }
 
 private val sample = listOf(
