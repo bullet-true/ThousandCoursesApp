@@ -5,13 +5,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import ru.ifedorov.courses.CoursesScreen
+import ru.ifedorov.data.repository.AssetCourseRepository
 import ru.ifedorov.favorites.FavoritesScreen
+import ru.ifedorov.thousandcourses.mapper.toCourseCardUiModel
 import ru.ifedorov.thousandcourses.ui.navigation.AppTab
 import ru.ifedorov.thousandcourses.ui.navigation.BottomBar
 import ru.ifedorov.ui.component.CourseCardUiModel
@@ -21,6 +26,15 @@ import ru.ifedorov.ui.theme.ThousandCoursesTheme
 fun ThousandCoursesApp() {
     ThousandCoursesTheme {
         var selectedTab by rememberSaveable { mutableStateOf(AppTab.Home) }
+        var courses by remember { mutableStateOf(emptyList<CourseCardUiModel>()) }
+        val context = LocalContext.current
+        val courseRepository = remember(context) {
+            AssetCourseRepository(assetManager = context.assets)
+        }
+
+        LaunchedEffect(courseRepository) {
+            courses = courseRepository.getCourses().map { course -> course.toCourseCardUiModel() }
+        }
 
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
@@ -32,9 +46,9 @@ fun ThousandCoursesApp() {
             }
         ) { innerPadding ->
             when (selectedTab) {
-                AppTab.Home -> CoursesContent(innerPadding = innerPadding)
-                AppTab.Favorites -> FavoritesContent(innerPadding = innerPadding)
-                AppTab.Account -> CoursesContent(innerPadding = innerPadding)
+                AppTab.Home -> CoursesContent(courses = courses, innerPadding = innerPadding)
+                AppTab.Favorites -> FavoritesContent(courses = courses, innerPadding = innerPadding)
+                AppTab.Account -> CoursesContent(courses = courses, innerPadding = innerPadding)
             }
         }
     }
@@ -42,10 +56,11 @@ fun ThousandCoursesApp() {
 
 @Composable
 private fun CoursesContent(
+    courses: List<CourseCardUiModel>,
     innerPadding: PaddingValues
 ) {
     CoursesScreen(
-        courses = sample,
+        courses = courses,
         modifier = Modifier.padding(innerPadding),
         onFavoriteClick = {},
         onDetailsClick = {},
@@ -56,47 +71,11 @@ private fun CoursesContent(
 
 @Composable
 private fun FavoritesContent(
+    courses: List<CourseCardUiModel>,
     innerPadding: PaddingValues
 ) {
     FavoritesScreen(
-        courses = sample.filter { it.isFavorite },
+        courses = courses.filter(CourseCardUiModel::isFavorite),
         modifier = Modifier.padding(innerPadding)
     )
 }
-
-private val sample = listOf(
-    CourseCardUiModel(
-        id = 1,
-        title = "Java-разработчик с нуля",
-        description = "Освойте backend-разработку и программирование на Java, фреймворки " +
-            "Spring и Maven, работу с базами данных и API. Создайте свой собственный проект, " +
-            "собрав портфолио и став востребованным специалистом для любой IT компании.",
-        price = "999 ₽",
-        rating = "4.9",
-        date = "22 Мая 2024",
-        isFavorite = false
-    ),
-    CourseCardUiModel(
-        id = 2,
-        title = "3D-дженералист",
-        description = "Освой профессию 3D-дженералиста и стань универсальным специалистом, " +
-            "который умеет создавать 3D-модели, текстуры и анимации, а также может строить " +
-            "карьеру в геймдеве, кино, рекламе или дизайне.",
-        price = "12 000 ₽",
-        rating = "3.9",
-        date = "10 Сентября 2024",
-        isFavorite = true
-    ),
-    CourseCardUiModel(
-        id = 3,
-        title = "Python Advanced. Для продвинутых",
-        description = "Вы узнаете, как разрабатывать гибкие и высокопроизводительные серверные " +
-            "приложения на языке Kotlin. Преподаватели на вебинарах покажут пример того, " +
-            "как разрабатывается проект маркетплейса: от идеи и постановки задачи – " +
-            "до конечного решения",
-        price = "1 299 ₽",
-        rating = "4.3",
-        date = "12 Октября 2024",
-        isFavorite = false
-    )
-)
