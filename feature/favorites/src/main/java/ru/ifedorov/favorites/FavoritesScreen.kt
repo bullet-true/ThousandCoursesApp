@@ -2,6 +2,7 @@ package ru.ifedorov.favorites
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
@@ -13,6 +14,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -51,22 +53,53 @@ fun FavoritesScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        LazyColumn(
-            modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(FavoriteCardSpacing),
-            contentPadding = PaddingValues(bottom = FavoritesListBottomPadding)
-        ) {
-            items(
-                items = courses,
-                key = CourseCardUiModel::id
-            ) { course ->
-                CourseCard(
-                    course = course,
-                    onFavoriteClick = onFavoriteClick,
-                    onDetailsClick = onDetailsClick
-                )
-            }
+        if (courses.isEmpty()) {
+            EmptyFavoritesContent()
+        } else {
+            FavoriteCoursesList(
+                courses = courses,
+                onFavoriteClick = onFavoriteClick,
+                onDetailsClick = onDetailsClick
+            )
         }
+    }
+}
+
+@Composable
+private fun FavoriteCoursesList(
+    courses: List<CourseCardUiModel>,
+    onFavoriteClick: (courseId: Int) -> Unit,
+    onDetailsClick: (courseId: Int) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.spacedBy(FavoriteCardSpacing),
+        contentPadding = PaddingValues(bottom = FavoritesListBottomPadding)
+    ) {
+        items(
+            items = courses,
+            key = CourseCardUiModel::id
+        ) { course ->
+            CourseCard(
+                course = course,
+                onFavoriteClick = onFavoriteClick,
+                onDetailsClick = onDetailsClick
+            )
+        }
+    }
+}
+
+@Composable
+private fun EmptyFavoritesContent() {
+    Box(
+        modifier = Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(id = R.string.favorites_empty_message),
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            style = MaterialTheme.typography.bodyMedium
+        )
     }
 }
 
@@ -76,6 +109,16 @@ private fun FavoritesScreenPreview() {
     ThousandCoursesTheme {
         FavoritesScreen(
             courses = sample
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun EmptyFavoritesScreenPreview() {
+    ThousandCoursesTheme {
+        FavoritesScreen(
+            courses = emptyList()
         )
     }
 }
