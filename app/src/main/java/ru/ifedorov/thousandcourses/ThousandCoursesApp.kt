@@ -11,6 +11,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import ru.ifedorov.courses.CoursesScreen
+import ru.ifedorov.favorites.FavoritesScreen
 import ru.ifedorov.thousandcourses.ui.navigation.AppTab
 import ru.ifedorov.thousandcourses.ui.navigation.BottomBar
 import ru.ifedorov.ui.component.CourseCardUiModel
@@ -30,7 +31,11 @@ fun ThousandCoursesApp() {
                 )
             }
         ) { innerPadding ->
-            CoursesContent(innerPadding = innerPadding)
+            when (selectedTab) {
+                AppTab.Home -> CoursesContent(innerPadding = innerPadding)
+                AppTab.Favorites -> FavoritesContent(innerPadding = innerPadding)
+                AppTab.Account -> CoursesContent(innerPadding = innerPadding)
+            }
         }
     }
 }
@@ -46,6 +51,15 @@ private fun CoursesContent(
         onDetailsClick = {},
         onFilterClick = {},
         onSortClick = {}
+    )
+}
+
+@Composable
+private fun FavoritesContent(
+    innerPadding: PaddingValues
+) {
+    FavoritesScreen(
+        modifier = Modifier.padding(innerPadding)
     )
 }
 
