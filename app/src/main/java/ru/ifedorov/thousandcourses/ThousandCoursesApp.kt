@@ -59,6 +59,7 @@ private fun FavoritesContent(
     innerPadding: PaddingValues
 ) {
     FavoritesScreen(
+        courses = sample.filter { it.isFavorite },
         modifier = Modifier.padding(innerPadding)
     )
 }
