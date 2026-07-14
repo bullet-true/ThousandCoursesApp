@@ -1,5 +1,6 @@
 package ru.ifedorov.thousandcourses.ui.navigation
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
@@ -69,6 +70,7 @@ fun ThousandCoursesNavHost(
     }
 }
 
+@SuppressLint("UnrememberedGetBackStackEntry")
 @Composable
 private fun sharedCoursesViewModel(
     navController: NavHostController
