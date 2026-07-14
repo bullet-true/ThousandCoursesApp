@@ -1,18 +1,10 @@
 package ru.ifedorov.thousandcourses.ui.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -20,6 +12,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import ru.ifedorov.account.AccountRoute
 import ru.ifedorov.courses.CoursesRoute
 import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.thousandcourses.R
@@ -69,7 +62,7 @@ fun ThousandCoursesNavHost(
                 )
             }
             composable(route = TopLevelDestination.Account.route) {
-                AccountPlaceholder(innerPadding = innerPadding)
+                AccountRoute(innerPadding = innerPadding)
             }
         }
     }
@@ -143,22 +136,5 @@ private fun CourseStateContent(
         )
 
         else -> onContent(uiState.courses)
-    }
-}
-
-@Composable
-private fun AccountPlaceholder(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.app_tab_account),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.headlineLarge
-        )
     }
 }
