@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -14,12 +15,9 @@ import ru.ifedorov.domain.repository.CourseRepository
 import ru.ifedorov.thousandcourses.mapper.toCourseCardUiModel
 import ru.ifedorov.ui.component.CourseCardUiModel
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
-data class CoursesUiState(
-    val courses: List<CourseCardUiModel> = emptyList(),
-    val isLoading: Boolean = true,
-    val errorMessage: String? = null
-)
+private const val DELAY_MS = 2_000
 
 @HiltViewModel
 class CoursesViewModel @Inject constructor(
@@ -35,6 +33,8 @@ class CoursesViewModel @Inject constructor(
 
     private fun loadCourses() {
         viewModelScope.launch {
+            delay(DELAY_MS.milliseconds)
+
             val result = runCatching {
                 withContext(Dispatchers.IO) {
                     courseRepository.getCourses().map { course -> course.toCourseCardUiModel() }
@@ -60,3 +60,9 @@ class CoursesViewModel @Inject constructor(
         }
     }
 }
+
+data class CoursesUiState(
+    val courses: List<CourseCardUiModel> = emptyList(),
+    val isLoading: Boolean = true,
+    val errorMessage: String? = null
+)
