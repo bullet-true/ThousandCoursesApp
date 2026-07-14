@@ -20,7 +20,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val coursesUiState by coursesViewModel.uiState.collectAsStateWithLifecycle()
 
-            ThousandCoursesApp(coursesUiState = coursesUiState)
+            ThousandCoursesApp(
+                coursesUiState = coursesUiState,
+                onFavoriteClick = { courseId ->
+                    coursesViewModel.onFavoriteClick(courseId)
+                }
+            )
         }
     }
 }

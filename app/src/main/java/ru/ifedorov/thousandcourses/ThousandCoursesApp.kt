@@ -26,7 +26,10 @@ import ru.ifedorov.ui.component.CourseCardUiModel
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
 @Composable
-fun ThousandCoursesApp(coursesUiState: CoursesUiState) {
+fun ThousandCoursesApp(
+    coursesUiState: CoursesUiState,
+    onFavoriteClick: (courseId: Int) -> Unit
+) {
     ThousandCoursesTheme {
         var selectedTab by rememberSaveable { mutableStateOf(AppTab.Home) }
 
@@ -45,7 +48,8 @@ fun ThousandCoursesApp(coursesUiState: CoursesUiState) {
                 else -> LoadedContent(
                     selectedTab = selectedTab,
                     courses = coursesUiState.courses,
-                    innerPadding = innerPadding
+                    innerPadding = innerPadding,
+                    onFavoriteClick = onFavoriteClick
                 )
             }
         }
@@ -56,12 +60,25 @@ fun ThousandCoursesApp(coursesUiState: CoursesUiState) {
 private fun LoadedContent(
     selectedTab: AppTab,
     courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onFavoriteClick: (courseId: Int) -> Unit
 ) {
     when (selectedTab) {
-        AppTab.Home -> CoursesContent(courses = courses, innerPadding = innerPadding)
-        AppTab.Favorites -> FavoritesContent(courses = courses, innerPadding = innerPadding)
-        AppTab.Account -> CoursesContent(courses = courses, innerPadding = innerPadding)
+        AppTab.Home -> CoursesContent(
+            courses = courses,
+            innerPadding = innerPadding,
+            onFavoriteClick = onFavoriteClick
+        )
+        AppTab.Favorites -> FavoritesContent(
+            courses = courses,
+            innerPadding = innerPadding,
+            onFavoriteClick = onFavoriteClick
+        )
+        AppTab.Account -> CoursesContent(
+            courses = courses,
+            innerPadding = innerPadding,
+            onFavoriteClick = onFavoriteClick
+        )
     }
 }
 
@@ -98,12 +115,13 @@ private fun ErrorContent(innerPadding: PaddingValues) {
 @Composable
 private fun CoursesContent(
     courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onFavoriteClick: (courseId: Int) -> Unit
 ) {
     CoursesScreen(
         courses = courses,
         modifier = Modifier.padding(innerPadding),
-        onFavoriteClick = {},
+        onFavoriteClick = onFavoriteClick,
         onDetailsClick = {},
         onFilterClick = {},
         onSortClick = {}
@@ -113,10 +131,12 @@ private fun CoursesContent(
 @Composable
 private fun FavoritesContent(
     courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues
+    innerPadding: PaddingValues,
+    onFavoriteClick: (courseId: Int) -> Unit
 ) {
     FavoritesScreen(
         courses = courses.filter(CourseCardUiModel::isFavorite),
-        modifier = Modifier.padding(innerPadding)
+        modifier = Modifier.padding(innerPadding),
+        onFavoriteClick = onFavoriteClick
     )
 }

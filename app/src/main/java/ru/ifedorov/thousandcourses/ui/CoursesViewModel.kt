@@ -59,6 +59,20 @@ class CoursesViewModel @Inject constructor(
             }
         }
     }
+
+    fun onFavoriteClick(courseId: Int) {
+        _uiState.update { state ->
+            state.copy(
+                courses = state.courses.map { course ->
+                    if (course.id == courseId) {
+                        course.copy(isFavorite = !course.isFavorite)
+                    } else {
+                        course
+                    }
+                }
+            )
+        }
+    }
 }
 
 data class CoursesUiState(
