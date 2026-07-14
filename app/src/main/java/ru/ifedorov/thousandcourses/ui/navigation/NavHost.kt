@@ -21,7 +21,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import ru.ifedorov.courses.CoursesScreen
+import ru.ifedorov.courses.CoursesRoute
 import ru.ifedorov.favorites.FavoritesScreen
 import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.thousandcourses.ui.CoursesUiState
@@ -47,10 +47,12 @@ fun ThousandCoursesNavHost(
                 val viewModel = sharedCoursesViewModel(navController)
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                CoursesRoute(
+                CoursesStateRoute(
                     uiState = uiState,
                     innerPadding = innerPadding,
-                    onFavoriteClick = viewModel::onFavoriteClick
+                    onFavoriteClick = { courseId ->
+                        viewModel.onFavoriteClick(courseId)
+                    }
                 )
             }
             composable(route = TopLevelDestination.Favorites.route) {
@@ -60,7 +62,9 @@ fun ThousandCoursesNavHost(
                 FavoritesRoute(
                     uiState = uiState,
                     innerPadding = innerPadding,
-                    onFavoriteClick = viewModel::onFavoriteClick
+                    onFavoriteClick = { courseId ->
+                        viewModel.onFavoriteClick(courseId)
+                    }
                 )
             }
             composable(route = TopLevelDestination.Account.route) {
@@ -82,7 +86,7 @@ private fun sharedCoursesViewModel(
 }
 
 @Composable
-private fun CoursesRoute(
+private fun CoursesStateRoute(
     uiState: CoursesUiState,
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
@@ -91,9 +95,9 @@ private fun CoursesRoute(
         uiState = uiState,
         innerPadding = innerPadding,
         onContent = { courses ->
-            CoursesScreen(
+            CoursesRoute(
                 courses = courses,
-                modifier = Modifier.padding(innerPadding),
+                innerPadding = innerPadding,
                 onFavoriteClick = onFavoriteClick,
                 onDetailsClick = {},
                 onFilterClick = {},
