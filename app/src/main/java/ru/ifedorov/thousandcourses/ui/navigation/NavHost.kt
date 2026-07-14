@@ -1,18 +1,11 @@
 package ru.ifedorov.thousandcourses.ui.navigation
 
 import android.annotation.SuppressLint
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -21,12 +14,14 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
-import ru.ifedorov.courses.CoursesScreen
-import ru.ifedorov.favorites.FavoritesScreen
+import ru.ifedorov.account.AccountRoute
+import ru.ifedorov.courses.CoursesRoute
+import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.thousandcourses.ui.CoursesUiState
 import ru.ifedorov.thousandcourses.ui.CoursesViewModel
-import ru.ifedorov.ui.component.CourseCardUiModel
+import ru.ifedorov.ui.component.ErrorContent
+import ru.ifedorov.ui.component.LoadingContent
 
 private const val MAIN_GRAPH_ROUTE = "main"
 
@@ -47,24 +42,28 @@ fun ThousandCoursesNavHost(
                 val viewModel = sharedCoursesViewModel(navController)
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                CoursesRoute(
+                CoursesStateRoute(
                     uiState = uiState,
                     innerPadding = innerPadding,
-                    onFavoriteClick = viewModel::onFavoriteClick
+                    onFavoriteClick = { courseId ->
+                        viewModel.onFavoriteClick(courseId)
+                    }
                 )
             }
             composable(route = TopLevelDestination.Favorites.route) {
                 val viewModel = sharedCoursesViewModel(navController)
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                FavoritesRoute(
+                FavoritesStateRoute(
                     uiState = uiState,
                     innerPadding = innerPadding,
-                    onFavoriteClick = viewModel::onFavoriteClick
+                    onFavoriteClick = { courseId ->
+                        viewModel.onFavoriteClick(courseId)
+                    }
                 )
             }
             composable(route = TopLevelDestination.Account.route) {
-                AccountPlaceholder(innerPadding = innerPadding)
+                AccountRoute(modifier = Modifier.padding(innerPadding))
             }
         }
     }
@@ -82,17 +81,22 @@ private fun sharedCoursesViewModel(
 }
 
 @Composable
-private fun CoursesRoute(
+private fun CoursesStateRoute(
     uiState: CoursesUiState,
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
 ) {
-    CourseStateContent(
-        uiState = uiState,
-        innerPadding = innerPadding,
-        onContent = { courses ->
-            CoursesScreen(
-                courses = courses,
+    when {
+        uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
+
+        uiState.errorMessage != null -> ErrorContent(
+            message = stringResource(id = R.string.courses_loading_error),
+            innerPadding = innerPadding
+        )
+
+        else -> {
+            CoursesRoute(
+                courses = uiState.courses,
                 modifier = Modifier.padding(innerPadding),
                 onFavoriteClick = onFavoriteClick,
                 onDetailsClick = {},
@@ -100,86 +104,30 @@ private fun CoursesRoute(
                 onSortClick = {}
             )
         }
-    )
+    }
 }
 
 @Composable
-private fun FavoritesRoute(
+private fun FavoritesStateRoute(
     uiState: CoursesUiState,
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
 ) {
-    CourseStateContent(
-        uiState = uiState,
-        innerPadding = innerPadding,
-        onContent = { courses ->
-            FavoritesScreen(
-                courses = courses.filter(CourseCardUiModel::isFavorite),
-                modifier = Modifier.padding(innerPadding),
-                onFavoriteClick = onFavoriteClick
-            )
-        }
-    )
-}
-
-@Composable
-private fun CourseStateContent(
-    uiState: CoursesUiState,
-    innerPadding: PaddingValues,
-    onContent: @Composable (courses: List<CourseCardUiModel>) -> Unit
-) {
     when {
         uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
 
-        uiState.errorMessage != null -> ErrorContent(innerPadding = innerPadding)
-
-        else -> onContent(uiState.courses)
-    }
-}
-
-@Composable
-private fun LoadingContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-    }
-}
-
-@Composable
-private fun ErrorContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.courses_loading_error),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium
+        uiState.errorMessage != null -> ErrorContent(
+            message = stringResource(id = R.string.courses_loading_error),
+            innerPadding = innerPadding
         )
-    }
-}
 
-@Composable
-private fun AccountPlaceholder(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.app_tab_account),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.headlineLarge
-        )
+        else -> {
+            FavoritesRoute(
+                courses = uiState.courses,
+                modifier = Modifier.padding(innerPadding),
+                onFavoriteClick = onFavoriteClick,
+                onDetailsClick = {}
+            )
+        }
     }
 }
