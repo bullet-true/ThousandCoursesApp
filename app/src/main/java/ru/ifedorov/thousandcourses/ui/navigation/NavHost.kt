@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -27,6 +26,8 @@ import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.thousandcourses.ui.CoursesUiState
 import ru.ifedorov.thousandcourses.ui.CoursesViewModel
 import ru.ifedorov.ui.component.CourseCardUiModel
+import ru.ifedorov.ui.component.ErrorContent
+import ru.ifedorov.ui.component.LoadingContent
 
 private const val MAIN_GRAPH_ROUTE = "main"
 
@@ -136,39 +137,12 @@ private fun CourseStateContent(
     when {
         uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
 
-        uiState.errorMessage != null -> ErrorContent(innerPadding = innerPadding)
+        uiState.errorMessage != null -> ErrorContent(
+            innerPadding = innerPadding,
+            message = stringResource(id = R.string.courses_loading_error)
+        )
 
         else -> onContent(uiState.courses)
-    }
-}
-
-@Composable
-private fun LoadingContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-    }
-}
-
-@Composable
-private fun ErrorContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.courses_loading_error),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium
-        )
     }
 }
 
