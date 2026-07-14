@@ -42,8 +42,8 @@ private val BottomBarIconSize = 24.dp
 
 @Composable
 fun BottomBar(
-    selectedTab: AppTab,
-    onTabClick: (AppTab) -> Unit
+    selectedTab: TopLevelDestination,
+    onTabClick: (TopLevelDestination) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -63,7 +63,7 @@ fun BottomBar(
             horizontalArrangement = Arrangement.spacedBy(BottomBarItemGap),
             verticalAlignment = Alignment.Top
         ) {
-            AppTab.entries.forEach { tab ->
+            TopLevelDestination.entries.forEach { tab ->
                 BottomBarItem(
                     tab = tab,
                     selected = tab == selectedTab,
@@ -77,7 +77,7 @@ fun BottomBar(
 
 @Composable
 private fun BottomBarItem(
-    tab: AppTab,
+    tab: TopLevelDestination,
     selected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -140,7 +140,7 @@ private fun BottomBarItem(
 private fun BottomBarPreview() {
     ThousandCoursesTheme {
         BottomBar(
-            selectedTab = AppTab.Home,
+            selectedTab = TopLevelDestination.Home,
             onTabClick = {}
         )
     }
@@ -151,7 +151,7 @@ private fun BottomBarPreview() {
 private fun BottomBarItemPreview() {
     ThousandCoursesTheme {
         BottomBarItem(
-            tab = AppTab.Home,
+            tab = TopLevelDestination.Home,
             selected = false,
             onClick = {}
         )
