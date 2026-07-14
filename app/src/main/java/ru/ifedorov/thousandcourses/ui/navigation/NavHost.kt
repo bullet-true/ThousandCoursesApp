@@ -22,7 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.ifedorov.courses.CoursesRoute
-import ru.ifedorov.favorites.FavoritesScreen
+import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.thousandcourses.ui.CoursesUiState
 import ru.ifedorov.thousandcourses.ui.CoursesViewModel
@@ -59,7 +59,7 @@ fun ThousandCoursesNavHost(
                 val viewModel = sharedCoursesViewModel(navController)
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-                FavoritesRoute(
+                FavoritesStateRoute(
                     uiState = uiState,
                     innerPadding = innerPadding,
                     onFavoriteClick = { courseId ->
@@ -108,7 +108,7 @@ private fun CoursesStateRoute(
 }
 
 @Composable
-private fun FavoritesRoute(
+private fun FavoritesStateRoute(
     uiState: CoursesUiState,
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
@@ -117,10 +117,11 @@ private fun FavoritesRoute(
         uiState = uiState,
         innerPadding = innerPadding,
         onContent = { courses ->
-            FavoritesScreen(
-                courses = courses.filter(CourseCardUiModel::isFavorite),
-                modifier = Modifier.padding(innerPadding),
-                onFavoriteClick = onFavoriteClick
+            FavoritesRoute(
+                courses = courses,
+                innerPadding = innerPadding,
+                onFavoriteClick = onFavoriteClick,
+                onDetailsClick = {}
             )
         }
     )
