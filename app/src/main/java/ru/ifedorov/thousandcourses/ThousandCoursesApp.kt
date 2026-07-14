@@ -1,142 +1,46 @@
 package ru.ifedorov.thousandcourses
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
-import ru.ifedorov.courses.CoursesScreen
-import ru.ifedorov.favorites.FavoritesScreen
-import ru.ifedorov.thousandcourses.ui.CoursesUiState
-import ru.ifedorov.thousandcourses.ui.navigation.AppTab
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
 import ru.ifedorov.thousandcourses.ui.navigation.BottomBar
-import ru.ifedorov.ui.component.CourseCardUiModel
+import ru.ifedorov.thousandcourses.ui.navigation.ThousandCoursesNavHost
+import ru.ifedorov.thousandcourses.ui.navigation.TopLevelDestination
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
 @Composable
-fun ThousandCoursesApp(
-    coursesUiState: CoursesUiState,
-    onFavoriteClick: (courseId: Int) -> Unit
-) {
+fun ThousandCoursesApp() {
     ThousandCoursesTheme {
-        var selectedTab by rememberSaveable { mutableStateOf(AppTab.Home) }
+        val navController = rememberNavController()
+        val currentBackStackEntry = navController.currentBackStackEntryAsState().value
+        val selectedTab = TopLevelDestination.fromRoute(currentBackStackEntry?.destination?.route)
 
         Scaffold(
             containerColor = MaterialTheme.colorScheme.background,
             bottomBar = {
                 BottomBar(
                     selectedTab = selectedTab,
-                    onTabClick = { tab -> selectedTab = tab }
+                    onTabClick = { tab -> navController.navigateToTab(tab) }
                 )
             }
         ) { innerPadding ->
-            when {
-                coursesUiState.isLoading -> LoadingContent(innerPadding = innerPadding)
-                coursesUiState.errorMessage != null -> ErrorContent(innerPadding = innerPadding)
-                else -> LoadedContent(
-                    selectedTab = selectedTab,
-                    courses = coursesUiState.courses,
-                    innerPadding = innerPadding,
-                    onFavoriteClick = onFavoriteClick
-                )
-            }
+            ThousandCoursesNavHost(
+                navController = navController,
+                innerPadding = innerPadding
+            )
         }
     }
 }
 
-@Composable
-private fun LoadedContent(
-    selectedTab: AppTab,
-    courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues,
-    onFavoriteClick: (courseId: Int) -> Unit
-) {
-    when (selectedTab) {
-        AppTab.Home -> CoursesContent(
-            courses = courses,
-            innerPadding = innerPadding,
-            onFavoriteClick = onFavoriteClick
-        )
-        AppTab.Favorites -> FavoritesContent(
-            courses = courses,
-            innerPadding = innerPadding,
-            onFavoriteClick = onFavoriteClick
-        )
-        AppTab.Account -> CoursesContent(
-            courses = courses,
-            innerPadding = innerPadding,
-            onFavoriteClick = onFavoriteClick
-        )
+private fun NavHostController.navigateToTab(tab: TopLevelDestination) {
+    navigate(tab.route) {
+        launchSingleTop = true
+        restoreState = true
+        popUpTo(graph.startDestinationId) {
+            saveState = true
+        }
     }
-}
-
-@Composable
-private fun LoadingContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        CircularProgressIndicator(color = MaterialTheme.colorScheme.primary)
-    }
-}
-
-@Composable
-private fun ErrorContent(innerPadding: PaddingValues) {
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-            .padding(innerPadding),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = stringResource(id = R.string.courses_loading_error),
-            color = MaterialTheme.colorScheme.onBackground,
-            style = MaterialTheme.typography.bodyMedium
-        )
-    }
-}
-
-@Composable
-private fun CoursesContent(
-    courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues,
-    onFavoriteClick: (courseId: Int) -> Unit
-) {
-    CoursesScreen(
-        courses = courses,
-        modifier = Modifier.padding(innerPadding),
-        onFavoriteClick = onFavoriteClick,
-        onDetailsClick = {},
-        onFilterClick = {},
-        onSortClick = {}
-    )
-}
-
-@Composable
-private fun FavoritesContent(
-    courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues,
-    onFavoriteClick: (courseId: Int) -> Unit
-) {
-    FavoritesScreen(
-        courses = courses.filter(CourseCardUiModel::isFavorite),
-        modifier = Modifier.padding(innerPadding),
-        onFavoriteClick = onFavoriteClick
-    )
 }
