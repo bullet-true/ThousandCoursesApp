@@ -1,7 +1,5 @@
 package ru.ifedorov.favorites
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.ifedorov.ui.component.CourseCardUiModel
@@ -9,13 +7,13 @@ import ru.ifedorov.ui.component.CourseCardUiModel
 @Composable
 fun FavoritesRoute(
     courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues,
+    modifier: Modifier = Modifier,
     onFavoriteClick: (courseId: Int) -> Unit,
     onDetailsClick: (courseId: Int) -> Unit
 ) {
     FavoritesScreen(
         courses = courses.filter { it.isFavorite },
-        modifier = Modifier.padding(innerPadding),
+        modifier = modifier,
         onFavoriteClick = onFavoriteClick,
         onDetailsClick = onDetailsClick
     )

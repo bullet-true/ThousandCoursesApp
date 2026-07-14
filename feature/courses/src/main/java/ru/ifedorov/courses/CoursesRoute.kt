@@ -1,7 +1,5 @@
 package ru.ifedorov.courses
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import ru.ifedorov.ui.component.CourseCardUiModel
@@ -9,7 +7,7 @@ import ru.ifedorov.ui.component.CourseCardUiModel
 @Composable
 fun CoursesRoute(
     courses: List<CourseCardUiModel>,
-    innerPadding: PaddingValues,
+    modifier: Modifier = Modifier,
     onFavoriteClick: (courseId: Int) -> Unit,
     onDetailsClick: (courseId: Int) -> Unit,
     onFilterClick: () -> Unit,
@@ -17,7 +15,7 @@ fun CoursesRoute(
 ) {
     CoursesScreen(
         courses = courses,
-        modifier = Modifier.padding(innerPadding),
+        modifier = modifier,
         onFavoriteClick = onFavoriteClick,
         onDetailsClick = onDetailsClick,
         onFilterClick = onFilterClick,

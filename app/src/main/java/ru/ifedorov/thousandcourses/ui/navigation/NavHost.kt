@@ -2,9 +2,11 @@ package ru.ifedorov.thousandcourses.ui.navigation
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -18,7 +20,6 @@ import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.thousandcourses.ui.CoursesUiState
 import ru.ifedorov.thousandcourses.ui.CoursesViewModel
-import ru.ifedorov.ui.component.CourseCardUiModel
 import ru.ifedorov.ui.component.ErrorContent
 import ru.ifedorov.ui.component.LoadingContent
 
@@ -62,7 +63,7 @@ fun ThousandCoursesNavHost(
                 )
             }
             composable(route = TopLevelDestination.Account.route) {
-                AccountRoute(innerPadding = innerPadding)
+                AccountRoute(modifier = Modifier.padding(innerPadding))
             }
         }
     }
@@ -85,20 +86,25 @@ private fun CoursesStateRoute(
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
 ) {
-    CourseStateContent(
-        uiState = uiState,
-        innerPadding = innerPadding,
-        onContent = { courses ->
+    when {
+        uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
+
+        uiState.errorMessage != null -> ErrorContent(
+            message = stringResource(id = R.string.courses_loading_error),
+            innerPadding = innerPadding
+        )
+
+        else -> {
             CoursesRoute(
-                courses = courses,
-                innerPadding = innerPadding,
+                courses = uiState.courses,
+                modifier = Modifier.padding(innerPadding),
                 onFavoriteClick = onFavoriteClick,
                 onDetailsClick = {},
                 onFilterClick = {},
                 onSortClick = {}
             )
         }
-    )
+    }
 }
 
 @Composable
@@ -107,34 +113,21 @@ private fun FavoritesStateRoute(
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
 ) {
-    CourseStateContent(
-        uiState = uiState,
-        innerPadding = innerPadding,
-        onContent = { courses ->
-            FavoritesRoute(
-                courses = courses,
-                innerPadding = innerPadding,
-                onFavoriteClick = onFavoriteClick,
-                onDetailsClick = {}
-            )
-        }
-    )
-}
-
-@Composable
-private fun CourseStateContent(
-    uiState: CoursesUiState,
-    innerPadding: PaddingValues,
-    onContent: @Composable (courses: List<CourseCardUiModel>) -> Unit
-) {
     when {
         uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
 
         uiState.errorMessage != null -> ErrorContent(
-            innerPadding = innerPadding,
-            message = stringResource(id = R.string.courses_loading_error)
+            message = stringResource(id = R.string.courses_loading_error),
+            innerPadding = innerPadding
         )
 
-        else -> onContent(uiState.courses)
+        else -> {
+            FavoritesRoute(
+                courses = uiState.courses,
+                modifier = Modifier.padding(innerPadding),
+                onFavoriteClick = onFavoriteClick,
+                onDetailsClick = {}
+            )
+        }
     }
 }
