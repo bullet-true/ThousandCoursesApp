@@ -32,7 +32,7 @@ private val FavoritesListBottomPadding = 24.dp
 fun FavoritesScreen(
     courses: List<CourseCardUiModel>,
     modifier: Modifier = Modifier,
-    onFavoriteClick: (courseId: Int) -> Unit = {},
+    onFavoriteClick: (courseId: Int) -> Unit,
     onDetailsClick: (courseId: Int) -> Unit = {}
 ) {
     Column(
@@ -108,7 +108,8 @@ private fun EmptyFavoritesContent() {
 private fun FavoritesScreenPreview() {
     ThousandCoursesTheme {
         FavoritesScreen(
-            courses = sample
+            courses = sample,
+            onFavoriteClick = {},
         )
     }
 }
@@ -118,7 +119,8 @@ private fun FavoritesScreenPreview() {
 private fun EmptyFavoritesScreenPreview() {
     ThousandCoursesTheme {
         FavoritesScreen(
-            courses = emptyList()
+            courses = emptyList(),
+            onFavoriteClick = {},
         )
     }
 }
