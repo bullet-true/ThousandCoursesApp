@@ -7,5 +7,6 @@ data class CourseCardUiModel(
     val price: String,
     val rating: String,
     val date: String,
-    val isFavorite: Boolean
+    val isFavorite: Boolean,
+    val imageUrl: String? = null
 )

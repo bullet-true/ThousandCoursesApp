@@ -25,12 +25,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 import ru.ifedorov.ui.R
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
@@ -60,7 +62,7 @@ fun CourseCard(
     onFavoriteClick: (courseId: Int) -> Unit,
     onDetailsClick: (courseId: Int) -> Unit,
     modifier: Modifier = Modifier,
-    imageContent: @Composable BoxScope.() -> Unit = { CourseImagePlaceholder() }
+    imageContent: @Composable BoxScope.() -> Unit = { CourseImage(course = course) }
 ) {
     Column(
         modifier = modifier
@@ -78,6 +80,22 @@ fun CourseCard(
             course = course,
             onDetailsClick = onDetailsClick
         )
+    }
+}
+
+@Composable
+private fun CourseImage(course: CourseCardUiModel) {
+    if (course.imageUrl == null) {
+        CourseImagePlaceholder()
+    } else {
+        Box(modifier = Modifier.fillMaxSize()) {
+            AsyncImage(
+                model = course.imageUrl,
+                contentDescription = null,
+                modifier = Modifier.fillMaxSize(),
+                contentScale = ContentScale.Crop
+            )
+        }
     }
 }
 
