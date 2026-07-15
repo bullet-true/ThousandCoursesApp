@@ -18,21 +18,21 @@ fun FavoritesRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when {
-        uiState.isLoading -> LoadingContent(
+    when (val state = uiState) {
+        FavoritesUiState.Loading -> LoadingContent(
             innerPadding = PaddingValues(),
             modifier = modifier
         )
 
-        uiState.errorMessage != null -> ErrorContent(
+        is FavoritesUiState.Error -> ErrorContent(
             message = stringResource(id = R.string.favorites_loading_error),
             innerPadding = PaddingValues(),
             modifier = modifier
         )
 
-        else -> {
+        is FavoritesUiState.Content -> {
             FavoritesScreen(
-                courses = uiState.courses,
+                courses = state.courses,
                 modifier = modifier,
                 onFavoriteClick = viewModel::onFavoriteClick,
                 onDetailsClick = onDetailsClick
