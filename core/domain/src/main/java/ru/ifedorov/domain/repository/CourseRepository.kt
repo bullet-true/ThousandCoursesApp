@@ -1,7 +1,12 @@
 package ru.ifedorov.domain.repository
 
+import kotlinx.coroutines.flow.Flow
 import ru.ifedorov.domain.model.Course
 
 interface CourseRepository {
-    suspend fun getCourses(): List<Course>
+    fun observeCourses(): Flow<List<Course>>
+
+    suspend fun loadCourses()
+
+    suspend fun toggleFavorite(courseId: Int)
 }

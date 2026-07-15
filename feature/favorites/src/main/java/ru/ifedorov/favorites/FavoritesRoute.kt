@@ -1,20 +1,39 @@
 package ru.ifedorov.favorites
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import ru.ifedorov.ui.component.CourseCardUiModel
+import androidx.compose.ui.res.stringResource
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import ru.ifedorov.ui.component.ErrorContent
+import ru.ifedorov.ui.component.LoadingContent
 
 @Composable
 fun FavoritesRoute(
-    courses: List<CourseCardUiModel>,
     modifier: Modifier = Modifier,
-    onFavoriteClick: (courseId: Int) -> Unit,
+    viewModel: FavoritesViewModel = hiltViewModel(),
     onDetailsClick: (courseId: Int) -> Unit
 ) {
-    FavoritesScreen(
-        courses = courses.filter { it.isFavorite },
-        modifier = modifier,
-        onFavoriteClick = onFavoriteClick,
-        onDetailsClick = onDetailsClick
-    )
+    val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+
+    when (val state = uiState) {
+        FavoritesUiState.Loading -> LoadingContent(
+            modifier = modifier
+        )
+
+        is FavoritesUiState.Error -> ErrorContent(
+            message = stringResource(id = R.string.favorites_loading_error),
+            modifier = modifier
+        )
+
+        is FavoritesUiState.Content -> {
+            FavoritesScreen(
+                courses = state.courses,
+                modifier = modifier,
+                onFavoriteClick = viewModel::onFavoriteClick,
+                onDetailsClick = onDetailsClick
+            )
+        }
+    }
 }

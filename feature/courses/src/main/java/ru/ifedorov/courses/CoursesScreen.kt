@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -25,6 +26,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,6 +36,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import kotlinx.coroutines.launch
 import ru.ifedorov.ui.component.CourseCard
 import ru.ifedorov.ui.component.CourseCardUiModel
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
@@ -63,6 +66,9 @@ fun CoursesScreen(
     onFilterClick: () -> Unit,
     onSortClick: () -> Unit
 ) {
+    val listState = rememberLazyListState()
+    val coroutineScope = rememberCoroutineScope()
+
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -77,12 +83,19 @@ fun CoursesScreen(
 
         Spacer(modifier = Modifier.height(16.dp))
 
-        SortLabel(onClick = onSortClick)
+        SortLabel(onClick = {
+            onSortClick()
+
+            coroutineScope.launch {
+                listState.animateScrollToItem(index = 0)
+            }
+        })
 
         Spacer(modifier = Modifier.height(16.dp))
 
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
+            state = listState,
             verticalArrangement = Arrangement.spacedBy(CourseCardSpacing),
             contentPadding = PaddingValues(bottom = CoursesListBottomPadding)
         ) {
@@ -93,7 +106,8 @@ fun CoursesScreen(
                 CourseCard(
                     course = course,
                     onFavoriteClick = onFavoriteClick,
-                    onDetailsClick = onDetailsClick
+                    onDetailsClick = onDetailsClick,
+                    modifier = Modifier.animateItem()
                 )
             }
         }

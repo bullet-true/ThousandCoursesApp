@@ -1,7 +1,6 @@
-package ru.ifedorov.thousandcourses.mapper
+package ru.ifedorov.ui.mapper
 
 import ru.ifedorov.domain.model.Course
-import ru.ifedorov.ui.component.CourseCardUiModel
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.Locale
@@ -11,8 +10,8 @@ private const val COURSE_JAVA_ID = 100
 private const val COURSE_3D_GENERALIST_ID = 101
 private const val COURSE_PYTHON_ADVANCED_ID = 102
 
-fun Course.toCourseCardUiModel(): CourseCardUiModel {
-    return CourseCardUiModel(
+fun Course.toCourseCardUiModel(): ru.ifedorov.ui.component.CourseCardUiModel {
+    return _root_ide_package_.ru.ifedorov.ui.component.CourseCardUiModel(
         id = id,
         title = title,
         description = description,
