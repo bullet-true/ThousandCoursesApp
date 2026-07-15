@@ -28,7 +28,30 @@ class CoursesViewModel @Inject constructor(
     val uiState: StateFlow<CoursesUiState> = _uiState.asStateFlow()
 
     init {
+        observeCourses()
         loadCourses()
+    }
+
+    fun onFavoriteClick(courseId: Int) {
+        viewModelScope.launch {
+            courseRepository.toggleFavorite(courseId = courseId)
+        }
+    }
+
+    private fun observeCourses() {
+        viewModelScope.launch {
+            courseRepository.observeCourses().collect { courses ->
+                if (courses.isEmpty() && _uiState.value.isLoading) return@collect
+
+                _uiState.update {
+                    it.copy(
+                        courses = courses.map { course -> course.toCourseCardUiModel() },
+                        isLoading = false,
+                        errorMessage = null
+                    )
+                }
+            }
+        }
     }
 
     private fun loadCourses() {
@@ -37,19 +60,11 @@ class CoursesViewModel @Inject constructor(
 
             val result = runCatching {
                 withContext(Dispatchers.IO) {
-                    courseRepository.getCourses().map { course -> course.toCourseCardUiModel() }
+                    courseRepository.loadCourses()
                 }
             }
 
-            result.onSuccess { courses ->
-                _uiState.update {
-                    it.copy(
-                        courses = courses,
-                        isLoading = false,
-                        errorMessage = null
-                    )
-                }
-            }.onFailure { throwable ->
+            result.onFailure { throwable ->
                 _uiState.update {
                     it.copy(
                         isLoading = false,
@@ -57,20 +72,6 @@ class CoursesViewModel @Inject constructor(
                     )
                 }
             }
-        }
-    }
-
-    fun onFavoriteClick(courseId: Int) {
-        _uiState.update { state ->
-            state.copy(
-                courses = state.courses.map { course ->
-                    if (course.id == courseId) {
-                        course.copy(isFavorite = !course.isFavorite)
-                    } else {
-                        course
-                    }
-                }
-            )
         }
     }
 }
