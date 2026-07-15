@@ -14,8 +14,8 @@ fun CoursesRoute(
     modifier: Modifier = Modifier,
     viewModel: CoursesViewModel = hiltViewModel(),
     onDetailsClick: (courseId: Int) -> Unit,
-    onFilterClick: () -> Unit,
-    onSortClick: () -> Unit
+    onFilterClick: () -> Unit = {},
+    onSortClick: () -> Unit = { viewModel.onSortClick() }
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

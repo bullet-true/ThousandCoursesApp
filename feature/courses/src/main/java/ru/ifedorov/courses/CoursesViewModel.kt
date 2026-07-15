@@ -9,8 +9,10 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import ru.ifedorov.domain.model.Course
 import ru.ifedorov.domain.repository.CourseRepository
 import ru.ifedorov.ui.mapper.toCourseCardUiModel
+import java.time.LocalDate
 import javax.inject.Inject
 
 @HiltViewModel
@@ -20,6 +22,9 @@ class CoursesViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow<CoursesUiState>(CoursesUiState.Loading)
     val uiState: StateFlow<CoursesUiState> = _uiState.asStateFlow()
+
+    private var currentCourses: List<Course> = emptyList()
+    private var sortMode = CoursesSortMode.Default
 
     init {
         observeCourses()
@@ -32,16 +37,31 @@ class CoursesViewModel @Inject constructor(
         }
     }
 
+    fun onSortClick() {
+        sortMode = CoursesSortMode.PublishDateDescending
+        showCourses(courses = currentCourses)
+    }
+
     private fun observeCourses() {
         viewModelScope.launch {
             courseRepository.observeCourses().collect { courses ->
                 if (courses.isEmpty() && _uiState.value is CoursesUiState.Loading) return@collect
 
-                _uiState.value = CoursesUiState.Content(
-                    courses = courses.map { course -> course.toCourseCardUiModel() }
-                )
+                currentCourses = courses
+                showCourses(courses = courses)
             }
         }
+    }
+
+    private fun showCourses(courses: List<Course>) {
+        val visibleCourses = when (sortMode) {
+            CoursesSortMode.Default -> courses
+            CoursesSortMode.PublishDateDescending -> courses.sortedByPublishDateDescending()
+        }
+
+        _uiState.value = CoursesUiState.Content(
+            courses = visibleCourses.map { course -> course.toCourseCardUiModel() }
+        )
     }
 
     private fun loadCourses() {
@@ -56,5 +76,16 @@ class CoursesViewModel @Inject constructor(
                 _uiState.value = CoursesUiState.Error(message = throwable.message)
             }
         }
+    }
+}
+
+private enum class CoursesSortMode {
+    Default,
+    PublishDateDescending
+}
+
+private fun List<Course>.sortedByPublishDateDescending(): List<Course> {
+    return sortedByDescending { course ->
+        runCatching { LocalDate.parse(course.publishDate) }.getOrDefault(LocalDate.MIN)
     }
 }

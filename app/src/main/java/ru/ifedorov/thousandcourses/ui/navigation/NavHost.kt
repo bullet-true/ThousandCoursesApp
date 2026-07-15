@@ -32,7 +32,6 @@ fun ThousandCoursesNavHost(
                     modifier = Modifier.padding(innerPadding),
                     onDetailsClick = {},
                     onFilterClick = {},
-                    onSortClick = {}
                 )
             }
             composable(route = TopLevelDestination.Favorites.route) {
