@@ -4,11 +4,6 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class NetworkCoursesResponse(
-    val courses: List<NetworkCourseDto>
-)
-
-@Serializable
 data class NetworkCourseDto(
     val id: Int,
     val title: String,
