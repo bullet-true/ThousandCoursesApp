@@ -1,5 +1,6 @@
 plugins {
     alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.serialization)
 }
 
 android {
@@ -22,5 +23,12 @@ android {
 }
 
 dependencies {
+    implementation(libs.kotlinx.serialization.json)
+
+    implementation(platform(libs.squareup.okhttp.bom))
+    implementation(libs.squareup.okhttp)
+    implementation(libs.okhttp.logging.interceptor)
+    implementation(libs.squareup.retrofit)
+    implementation(libs.squareup.converter.kotlinx.serialization)
 
 }
