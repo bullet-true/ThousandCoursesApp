@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun LoginRoute(
+    onLoginSuccess: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LoginViewModel = hiltViewModel()
 ) {
@@ -21,6 +22,10 @@ fun LoginRoute(
     LaunchedEffect(viewModel) {
         viewModel.uiEvent.collect { event ->
             when (event) {
+                LoginUiEvent.LoginSuccess -> {
+                    onLoginSuccess()
+                }
+
                 LoginUiEvent.InvalidCredentials -> {
                     Toast.makeText(context, invalidCredentialsMessage, Toast.LENGTH_SHORT).show()
                 }
@@ -31,7 +36,9 @@ fun LoginRoute(
     LoginScreen(
         modifier = modifier,
         isLoading = uiState.isLoading,
-        onLoginClick = { _, _ -> },
+        onLoginClick = { email, password ->
+            viewModel.onLoginClick(email, password)
+        },
         onRegistrationClick = {},
         onForgotPasswordClick = {},
         onVkLoginClick = {},

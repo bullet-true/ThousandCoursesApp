@@ -29,24 +29,24 @@ class LoginViewModel @Inject constructor(
         viewModelScope.launch {
             _uiState.update {
                 it.copy(
-                    isLoading = true,
-                    isLoginSuccessful = false
+                    isLoading = true
                 )
             }
 
             val isLoginSuccessful = authRepository.login(
-                email = email,
+                email = email.trim(),
                 password = password
             )
 
             _uiState.update {
                 it.copy(
-                    isLoading = false,
-                    isLoginSuccessful = isLoginSuccessful
+                    isLoading = false
                 )
             }
 
-            if (!isLoginSuccessful) {
+            if (isLoginSuccessful) {
+                _uiEvent.emit(LoginUiEvent.LoginSuccess)
+            } else {
                 _uiEvent.emit(LoginUiEvent.InvalidCredentials)
             }
         }
