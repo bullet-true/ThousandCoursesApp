@@ -14,9 +14,9 @@ import ru.ifedorov.ui.component.LoadingContent
 fun CoursesRoute(
     modifier: Modifier = Modifier,
     viewModel: CoursesViewModel = hiltViewModel(),
-    onDetailsClick: (courseId: Int) -> Unit = {},
-    onFilterClick: () -> Unit = {},
-    onSortClick: () -> Unit = {}
+    onDetailsClick: (courseId: Int) -> Unit,
+    onFilterClick: () -> Unit,
+    onSortClick: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 

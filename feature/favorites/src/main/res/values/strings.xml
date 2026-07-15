@@ -2,4 +2,5 @@
 <resources>
     <string name="favorites_title">Избранное</string>
     <string name="favorites_empty_message">В избранном пока ничего нет</string>
+    <string name="favorites_loading_error">Не удалось загрузить избранное</string>
 </resources>
