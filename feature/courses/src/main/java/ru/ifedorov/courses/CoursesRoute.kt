@@ -20,21 +20,21 @@ fun CoursesRoute(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
-    when {
-        uiState.isLoading -> LoadingContent(
+    when (val state = uiState) {
+        CoursesUiState.Loading -> LoadingContent(
             innerPadding = PaddingValues(),
             modifier = modifier
         )
 
-        uiState.errorMessage != null -> ErrorContent(
+        is CoursesUiState.Error -> ErrorContent(
             message = stringResource(id = R.string.courses_loading_error),
             innerPadding = PaddingValues(),
             modifier = modifier
         )
 
-        else -> {
+        is CoursesUiState.Content -> {
             CoursesScreen(
-                courses = uiState.courses,
+                courses = state.courses,
                 modifier = modifier,
                 onFavoriteClick = viewModel::onFavoriteClick,
                 onDetailsClick = onDetailsClick,
