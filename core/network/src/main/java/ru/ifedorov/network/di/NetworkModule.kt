@@ -6,9 +6,11 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.kotlinx.serialization.asConverterFactory
 import ru.ifedorov.network.api.CoursesApi
+import ru.ifedorov.network.interceptor.MockCoursesInterceptor
 import javax.inject.Singleton
 
 private const val COURSES_API_BASE_URL = "https://example.com/"
@@ -27,8 +29,20 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRetrofit(json: Json): Retrofit = Retrofit.Builder()
+    fun provideOkHttpClient(
+        mockCoursesInterceptor: MockCoursesInterceptor
+    ): OkHttpClient = OkHttpClient.Builder()
+        .addInterceptor(mockCoursesInterceptor)
+        .build()
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        json: Json,
+        okHttpClient: OkHttpClient
+    ): Retrofit = Retrofit.Builder()
         .baseUrl(COURSES_API_BASE_URL)
+        .client(okHttpClient)
         .addConverterFactory(json.asConverterFactory(JSON_MEDIA_TYPE.toMediaType()))
         .build()
 
