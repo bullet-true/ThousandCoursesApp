@@ -3,4 +3,5 @@
     <string name="courses_search_placeholder">Search courses...</string>
     <string name="courses_filter_content_description">Фильтр курсов</string>
     <string name="courses_sort_by_date">По дате добавления</string>
+    <string name="courses_loading_error">Не удалось загрузить курсы</string>
 </resources>

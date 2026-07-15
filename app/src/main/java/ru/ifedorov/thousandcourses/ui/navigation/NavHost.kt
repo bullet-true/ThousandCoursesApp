@@ -14,8 +14,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.ifedorov.account.AccountRoute
 import ru.ifedorov.courses.CoursesRoute
-import ru.ifedorov.courses.CoursesUiState
-import ru.ifedorov.courses.CoursesViewModel
 import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.favorites.FavoritesUiState
 import ru.ifedorov.favorites.FavoritesViewModel
@@ -39,15 +37,8 @@ fun ThousandCoursesNavHost(
             route = MAIN_GRAPH_ROUTE
         ) {
             composable(route = TopLevelDestination.Home.route) {
-                val viewModel = hiltViewModel<CoursesViewModel>()
-                val uiState by viewModel.uiState.collectAsStateWithLifecycle()
-
-                CoursesStateRoute(
-                    uiState = uiState,
-                    innerPadding = innerPadding,
-                    onFavoriteClick = { courseId ->
-                        viewModel.onFavoriteClick(courseId)
-                    }
+                CoursesRoute(
+                    modifier = Modifier.padding(innerPadding)
                 )
             }
             composable(route = TopLevelDestination.Favorites.route) {
@@ -65,33 +56,6 @@ fun ThousandCoursesNavHost(
             composable(route = TopLevelDestination.Account.route) {
                 AccountRoute(modifier = Modifier.padding(innerPadding))
             }
-        }
-    }
-}
-
-@Composable
-private fun CoursesStateRoute(
-    uiState: CoursesUiState,
-    innerPadding: PaddingValues,
-    onFavoriteClick: (courseId: Int) -> Unit
-) {
-    when {
-        uiState.isLoading -> LoadingContent(innerPadding = innerPadding)
-
-        uiState.errorMessage != null -> ErrorContent(
-            message = stringResource(id = R.string.courses_loading_error),
-            innerPadding = innerPadding
-        )
-
-        else -> {
-            CoursesRoute(
-                courses = uiState.courses,
-                modifier = Modifier.padding(innerPadding),
-                onFavoriteClick = onFavoriteClick,
-                onDetailsClick = {},
-                onFilterClick = {},
-                onSortClick = {}
-            )
         }
     }
 }
