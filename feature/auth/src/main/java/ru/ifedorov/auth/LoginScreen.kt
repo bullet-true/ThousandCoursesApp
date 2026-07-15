@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.input.InputTransformation
 import androidx.compose.foundation.text.input.TextFieldLineLimits
 import androidx.compose.foundation.text.input.TextFieldState
 import androidx.compose.foundation.text.input.rememberTextFieldState
@@ -37,6 +38,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.ifedorov.auth.validator.LoginInputValidator
 import ru.ifedorov.ui.theme.OkButtonGradientEndColor
 import ru.ifedorov.ui.theme.OkButtonGradientStartColor
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
@@ -48,9 +50,16 @@ private val AuthComponentHeight = 40.dp
 private val AuthCornerRadius = 24.dp
 private val ButtonCornerRadius = 30.dp
 
+private val EmailInputTransformation = InputTransformation {
+    if (LoginInputValidator.containsCyrillic(input = asCharSequence())) {
+        revertAllChanges()
+    }
+}
+
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     onLoginClick: (email: String, password: String) -> Unit,
     onRegistrationClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -59,6 +68,11 @@ fun LoginScreen(
 ) {
     val emailState = rememberTextFieldState()
     val passwordState = rememberTextFieldState()
+
+    val isLoginEnabled = LoginInputValidator.isLoginInputValid(
+        email = emailState.text,
+        password = passwordState.text
+    )
 
     Column(
         modifier = modifier
@@ -81,7 +95,8 @@ fun LoginScreen(
 
         AuthTextField(
             state = emailState,
-            placeholder = stringResource(R.string.auth_email_placeholder)
+            placeholder = stringResource(R.string.auth_email_placeholder),
+            inputTransformation = EmailInputTransformation
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -100,6 +115,7 @@ fun LoginScreen(
 
         AuthButton(
             text = stringResource(R.string.auth_login_button),
+            enabled = !isLoading && isLoginEnabled,
             onClick = {
                 onLoginClick(
                     emailState.text.toString(),
@@ -146,7 +162,8 @@ private fun AuthTextField(
     state: TextFieldState,
     placeholder: String,
     modifier: Modifier = Modifier,
-    isPassword: Boolean = false
+    isPassword: Boolean = false,
+    inputTransformation: InputTransformation? = null
 ) {
     if (isPassword) {
         OutlinedSecureTextField(
@@ -164,6 +181,7 @@ private fun AuthTextField(
             lineLimits = TextFieldLineLimits.SingleLine,
             shape = RoundedCornerShape(AuthCornerRadius),
             placeholder = { AuthTextFieldPlaceholder(text = placeholder) },
+            inputTransformation = inputTransformation,
             contentPadding = AuthTextFieldPadding,
             colors = AuthTextFieldColors()
         )
@@ -182,10 +200,12 @@ private fun AuthTextFieldPlaceholder(text: String) {
 @Composable
 private fun AuthButton(
     text: String,
+    enabled: Boolean,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier
             .fillMaxWidth()
             .height(AuthComponentHeight),
@@ -343,6 +363,7 @@ private fun AuthButtonPreview() {
     ThousandCoursesTheme {
         AuthButton(
             text = "Вход",
+            enabled = true,
             onClick = {}
         )
     }
