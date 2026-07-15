@@ -1,6 +1,7 @@
 package ru.ifedorov.data.repository
 
 import android.content.res.AssetManager
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,6 +13,9 @@ import ru.ifedorov.data.model.CoursesResponseDto
 import ru.ifedorov.data.model.toDomain
 import ru.ifedorov.domain.model.Course
 import ru.ifedorov.domain.repository.CourseRepository
+import kotlin.time.Duration.Companion.milliseconds
+
+private const val DELAY_MS = 2_000
 
 class AssetCourseRepository(
     private val assetManager: AssetManager,
@@ -27,6 +31,8 @@ class AssetCourseRepository(
     override fun observeCourses(): Flow<List<Course>> = courses.asStateFlow()
 
     override suspend fun loadCourses() {
+        delay(DELAY_MS.milliseconds)
+
         if (courses.value.isNotEmpty()) return
 
         loadMutex.withLock {

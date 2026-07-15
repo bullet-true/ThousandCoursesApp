@@ -1,6 +1,5 @@
 package ru.ifedorov.favorites
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -20,13 +19,11 @@ fun FavoritesRoute(
 
     when (val state = uiState) {
         FavoritesUiState.Loading -> LoadingContent(
-            innerPadding = PaddingValues(),
             modifier = modifier
         )
 
         is FavoritesUiState.Error -> ErrorContent(
             message = stringResource(id = R.string.favorites_loading_error),
-            innerPadding = PaddingValues(),
             modifier = modifier
         )
 

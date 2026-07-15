@@ -1,6 +1,5 @@
 package ru.ifedorov.courses
 
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -22,13 +21,11 @@ fun CoursesRoute(
 
     when (val state = uiState) {
         CoursesUiState.Loading -> LoadingContent(
-            innerPadding = PaddingValues(),
             modifier = modifier
         )
 
         is CoursesUiState.Error -> ErrorContent(
             message = stringResource(id = R.string.courses_loading_error),
-            innerPadding = PaddingValues(),
             modifier = modifier
         )
 
