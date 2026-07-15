@@ -11,4 +11,5 @@
     <string name="auth_forgot_password">Забыли пароль</string>
     <string name="auth_login_with_vk">Войти через VK</string>
     <string name="auth_login_with_ok">Войти через Одноклассники</string>
+    <string name="auth_invalid_credentials">Неверный email или пароль</string>
 </resources>

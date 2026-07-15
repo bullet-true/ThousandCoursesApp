@@ -51,6 +51,7 @@ private val ButtonCornerRadius = 30.dp
 @Composable
 fun LoginScreen(
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     onLoginClick: (email: String, password: String) -> Unit,
     onRegistrationClick: () -> Unit,
     onForgotPasswordClick: () -> Unit,
@@ -100,6 +101,7 @@ fun LoginScreen(
 
         AuthButton(
             text = stringResource(R.string.auth_login_button),
+            enabled = !isLoading,
             onClick = {
                 onLoginClick(
                     emailState.text.toString(),
@@ -182,10 +184,12 @@ private fun AuthTextFieldPlaceholder(text: String) {
 @Composable
 private fun AuthButton(
     text: String,
+    enabled: Boolean,
     onClick: () -> Unit
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier
             .fillMaxWidth()
             .height(AuthComponentHeight),
@@ -343,6 +347,7 @@ private fun AuthButtonPreview() {
     ThousandCoursesTheme {
         AuthButton(
             text = "Вход",
+            enabled = true,
             onClick = {}
         )
     }
