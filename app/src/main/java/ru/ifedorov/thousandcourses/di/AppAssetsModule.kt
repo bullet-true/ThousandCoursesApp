@@ -1,18 +1,21 @@
 package ru.ifedorov.thousandcourses.di
 
+import android.content.Context
+import android.content.res.AssetManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
-import ru.ifedorov.data.repository.FakeAuthRepository
-import ru.ifedorov.domain.repository.AuthRepository
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AuthDataModule {
+object AppAssetsModule {
 
     @Provides
     @Singleton
-    fun provideAuthRepository(): AuthRepository = FakeAuthRepository()
+    fun provideAssetManager(
+        @ApplicationContext context: Context
+    ): AssetManager = context.assets
 }
