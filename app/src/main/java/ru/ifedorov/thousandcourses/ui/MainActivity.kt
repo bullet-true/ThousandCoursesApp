@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses
+package ru.ifedorov.thousandcourses.ui
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity

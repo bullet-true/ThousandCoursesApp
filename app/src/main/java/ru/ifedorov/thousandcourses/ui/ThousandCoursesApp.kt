@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses
+package ru.ifedorov.thousandcourses.ui
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -11,9 +11,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import ru.ifedorov.auth.LoginRoute
-import ru.ifedorov.thousandcourses.ui.navigation.BottomBar
-import ru.ifedorov.thousandcourses.ui.navigation.ThousandCoursesNavHost
-import ru.ifedorov.thousandcourses.ui.navigation.TopLevelDestination
+import ru.ifedorov.thousandcourses.components.BottomBar
+import ru.ifedorov.thousandcourses.navigation.ThousandCoursesNavHost
+import ru.ifedorov.thousandcourses.navigation.TopLevelDestination
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
 private const val ROOT_LOGIN_ROUTE = "root_login"

@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui.navigation
+package ru.ifedorov.thousandcourses.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier

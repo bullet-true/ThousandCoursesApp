@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui.navigation
+package ru.ifedorov.thousandcourses.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -29,6 +29,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import ru.ifedorov.thousandcourses.navigation.TopLevelDestination
 import ru.ifedorov.ui.theme.ThousandCoursesTheme
 
 private val BottomBarHeight = 80.dp

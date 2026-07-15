@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui.navigation
+package ru.ifedorov.thousandcourses.navigation
 
 import ru.ifedorov.thousandcourses.R
 
@@ -28,6 +28,7 @@ enum class TopLevelDestination(
     );
 
     companion object {
-        fun fromRoute(route: String?): TopLevelDestination = entries.firstOrNull { tab -> tab.route == route } ?: Home
+        fun fromRoute(route: String?): TopLevelDestination =
+            entries.firstOrNull { tab -> tab.route == route } ?: Home
     }
 }
