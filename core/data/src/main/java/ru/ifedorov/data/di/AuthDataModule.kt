@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.di
+package ru.ifedorov.data.di
 
 import dagger.Module
 import dagger.Provides

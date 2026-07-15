@@ -4,8 +4,7 @@ import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import ru.ifedorov.data.repository.DefaultCourseRepository
-import ru.ifedorov.domain.repository.CourseRepository
+import ru.ifedorov.data.repository.CourseRepository
 import javax.inject.Singleton
 
 @Module
@@ -14,5 +13,5 @@ abstract class CourseDataModule {
 
     @Binds
     @Singleton
-    abstract fun bindCourseRepository(repository: DefaultCourseRepository): CourseRepository
+    abstract fun bindCourseRepository(repository: CourseRepository): ru.ifedorov.domain.repository.CourseRepository
 }

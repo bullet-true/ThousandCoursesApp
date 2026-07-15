@@ -2,9 +2,10 @@ package ru.ifedorov.data.repository
 
 import kotlinx.coroutines.delay
 import ru.ifedorov.domain.repository.AuthRepository
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-class FakeAuthRepository : AuthRepository {
+class FakeAuthRepository @Inject constructor() : AuthRepository {
 
     override suspend fun login(email: String, password: String): Boolean {
         delay(DELAY_MS.milliseconds)

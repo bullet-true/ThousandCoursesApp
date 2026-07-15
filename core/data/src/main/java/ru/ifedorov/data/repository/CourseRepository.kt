@@ -1,6 +1,5 @@
 package ru.ifedorov.data.repository
 
-import android.content.res.AssetManager
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -8,21 +7,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
-import kotlinx.serialization.json.Json
-import ru.ifedorov.data.model.CoursesResponseDto
-import ru.ifedorov.data.model.toDomain
+import ru.ifedorov.data.mapper.toDomain
 import ru.ifedorov.domain.model.Course
 import ru.ifedorov.domain.repository.CourseRepository
+import ru.ifedorov.network.datasource.CoursesNetworkDataSource
+import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
-private const val DELAY_MS = 2_000
+private const val DELAY_MS = 2_000L
 
-class AssetCourseRepository(
-    private val assetManager: AssetManager,
-    private val json: Json = Json {
-        ignoreUnknownKeys = true
-        coerceInputValues = true
-    }
+class CourseRepository @Inject constructor(
+    private val coursesNetworkDataSource: CoursesNetworkDataSource
 ) : CourseRepository {
 
     private val courses = MutableStateFlow<List<Course>>(emptyList())
@@ -37,7 +32,10 @@ class AssetCourseRepository(
 
         loadMutex.withLock {
             if (courses.value.isNotEmpty()) return@withLock
-            courses.value = readCoursesFromAssets()
+
+            courses.value = coursesNetworkDataSource.getCourses().map { courseDto ->
+                courseDto.toDomain()
+            }
         }
     }
 
@@ -51,18 +49,5 @@ class AssetCourseRepository(
                 }
             }
         }
-    }
-
-    private fun readCoursesFromAssets() = assetManager.open(COURSES_ASSET_NAME)
-        .bufferedReader().use { reader ->
-            val coursesResponse = json.decodeFromString<CoursesResponseDto>(
-                reader.readText()
-            )
-
-            coursesResponse.courses.map { courseDto -> courseDto.toDomain() }
-        }
-
-    private companion object {
-        const val COURSES_ASSET_NAME = "courses.json"
     }
 }
