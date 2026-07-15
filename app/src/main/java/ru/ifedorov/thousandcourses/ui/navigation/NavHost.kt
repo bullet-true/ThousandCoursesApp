@@ -1,11 +1,9 @@
 package ru.ifedorov.thousandcourses.ui.navigation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -19,6 +17,8 @@ import ru.ifedorov.courses.CoursesRoute
 import ru.ifedorov.courses.CoursesUiState
 import ru.ifedorov.courses.CoursesViewModel
 import ru.ifedorov.favorites.FavoritesRoute
+import ru.ifedorov.favorites.FavoritesUiState
+import ru.ifedorov.favorites.FavoritesViewModel
 import ru.ifedorov.thousandcourses.R
 import ru.ifedorov.ui.component.ErrorContent
 import ru.ifedorov.ui.component.LoadingContent
@@ -39,7 +39,7 @@ fun ThousandCoursesNavHost(
             route = MAIN_GRAPH_ROUTE
         ) {
             composable(route = TopLevelDestination.Home.route) {
-                val viewModel = sharedCoursesViewModel(navController)
+                val viewModel = hiltViewModel<CoursesViewModel>()
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 CoursesStateRoute(
@@ -51,7 +51,7 @@ fun ThousandCoursesNavHost(
                 )
             }
             composable(route = TopLevelDestination.Favorites.route) {
-                val viewModel = sharedCoursesViewModel(navController)
+                val viewModel = hiltViewModel<FavoritesViewModel>()
                 val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
                 FavoritesStateRoute(
@@ -67,17 +67,6 @@ fun ThousandCoursesNavHost(
             }
         }
     }
-}
-
-@SuppressLint("UnrememberedGetBackStackEntry")
-@Composable
-private fun sharedCoursesViewModel(
-    navController: NavHostController
-): CoursesViewModel {
-    val parentEntry = remember(navController) {
-        navController.getBackStackEntry(MAIN_GRAPH_ROUTE)
-    }
-    return hiltViewModel(parentEntry)
 }
 
 @Composable
@@ -109,7 +98,7 @@ private fun CoursesStateRoute(
 
 @Composable
 private fun FavoritesStateRoute(
-    uiState: CoursesUiState,
+    uiState: FavoritesUiState,
     innerPadding: PaddingValues,
     onFavoriteClick: (courseId: Int) -> Unit
 ) {

@@ -12,7 +12,7 @@ fun FavoritesRoute(
     onDetailsClick: (courseId: Int) -> Unit
 ) {
     FavoritesScreen(
-        courses = courses.filter { it.isFavorite },
+        courses = courses,
         modifier = modifier,
         onFavoriteClick = onFavoriteClick,
         onDetailsClick = onDetailsClick
