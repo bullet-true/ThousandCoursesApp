@@ -16,10 +16,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import ru.ifedorov.account.AccountRoute
 import ru.ifedorov.courses.CoursesRoute
+import ru.ifedorov.courses.CoursesUiState
+import ru.ifedorov.courses.CoursesViewModel
 import ru.ifedorov.favorites.FavoritesRoute
 import ru.ifedorov.thousandcourses.R
-import ru.ifedorov.thousandcourses.ui.CoursesUiState
-import ru.ifedorov.thousandcourses.ui.CoursesViewModel
 import ru.ifedorov.ui.component.ErrorContent
 import ru.ifedorov.ui.component.LoadingContent
 

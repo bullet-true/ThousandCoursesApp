@@ -1,4 +1,4 @@
-package ru.ifedorov.thousandcourses.ui
+package ru.ifedorov.courses
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -12,8 +12,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import ru.ifedorov.domain.repository.CourseRepository
-import ru.ifedorov.thousandcourses.mapper.toCourseCardUiModel
 import ru.ifedorov.ui.component.CourseCardUiModel
+import ru.ifedorov.ui.mapper.toCourseCardUiModel
 import javax.inject.Inject
 import kotlin.time.Duration.Companion.milliseconds
 
