@@ -26,6 +26,7 @@ android {
 dependencies {
     implementation(project(":core:domain"))
     implementation(project(":core:network"))
+    implementation(project(":core:database"))
 
     implementation(libs.kotlinx.coroutines.core)
 

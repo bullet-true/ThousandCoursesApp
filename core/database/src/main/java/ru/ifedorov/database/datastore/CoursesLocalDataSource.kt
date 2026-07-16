@@ -7,6 +7,8 @@ interface CoursesLocalDataSource {
 
     fun observeCourses(): Flow<List<Course>>
 
+    suspend fun getCourses(): List<Course>
+
     fun observeFavoriteCourses(): Flow<List<Course>>
 
     suspend fun upsertCourses(courses: List<Course>)

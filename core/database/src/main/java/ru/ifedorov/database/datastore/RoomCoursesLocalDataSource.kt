@@ -17,6 +17,9 @@ class RoomCoursesLocalDataSource @Inject constructor(
             courses.map { course -> course.toDomain() }
         }
 
+    override suspend fun getCourses(): List<Course> =
+        courseDao.getCourses().map { course -> course.toDomain() }
+
     override fun observeFavoriteCourses(): Flow<List<Course>> =
         courseDao.observeFavoriteCourses().map { courses ->
             courses.map { course -> course.toDomain() }
