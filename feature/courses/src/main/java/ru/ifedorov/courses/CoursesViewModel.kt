@@ -3,12 +3,10 @@ package ru.ifedorov.courses
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.ifedorov.domain.model.Course
 import ru.ifedorov.domain.repository.CourseRepository
 import ru.ifedorov.ui.mapper.toCourseCardUiModel
@@ -67,9 +65,7 @@ class CoursesViewModel @Inject constructor(
     private fun loadCourses() {
         viewModelScope.launch {
             val result = runCatching {
-                withContext(Dispatchers.IO) {
-                    courseRepository.loadCourses()
-                }
+                courseRepository.loadCourses()
             }
 
             result.onFailure { throwable ->

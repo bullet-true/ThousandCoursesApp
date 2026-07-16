@@ -3,12 +3,10 @@ package ru.ifedorov.favorites
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import ru.ifedorov.domain.repository.CourseRepository
 import ru.ifedorov.ui.mapper.toCourseCardUiModel
 import javax.inject.Inject
@@ -34,13 +32,10 @@ class FavoritesViewModel @Inject constructor(
 
     private fun observeFavoriteCourses() {
         viewModelScope.launch {
-            courseRepository.observeCourses().collect { courses ->
-                if (courses.isEmpty() && _uiState.value is FavoritesUiState.Loading) return@collect
+            courseRepository.observeFavoriteCourses().collect { courses ->
 
                 _uiState.value = FavoritesUiState.Content(
-                    courses = courses
-                        .filter { course -> course.isFavorite }
-                        .map { course -> course.toCourseCardUiModel() }
+                    courses = courses.map { course -> course.toCourseCardUiModel() }
                 )
             }
         }
@@ -49,9 +44,7 @@ class FavoritesViewModel @Inject constructor(
     private fun loadCourses() {
         viewModelScope.launch {
             val result = runCatching {
-                withContext(Dispatchers.IO) {
-                    courseRepository.loadCourses()
-                }
+                courseRepository.loadCourses()
             }
 
             result.onFailure { throwable ->
