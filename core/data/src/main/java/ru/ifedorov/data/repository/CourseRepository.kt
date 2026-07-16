@@ -20,6 +20,9 @@ class CourseRepository @Inject constructor(
     override fun observeCourses(): Flow<List<Course>> =
         coursesLocalDataSource.observeCourses()
 
+    override fun observeFavoriteCourses(): Flow<List<Course>> =
+        coursesLocalDataSource.observeFavoriteCourses()
+
     override suspend fun loadCourses() {
         delay(DELAY_MS.milliseconds)
 
@@ -35,9 +38,11 @@ class CourseRepository @Inject constructor(
     }
 
     override suspend fun toggleFavorite(courseId: Int) {
-        val course =
-            coursesLocalDataSource.getCourses().firstOrNull { course -> course.id == courseId }
-                ?: return
+        val course = coursesLocalDataSource.getCourses()
+            .firstOrNull { course ->
+                course.id == courseId
+            }
+            ?: return
 
         coursesLocalDataSource.updateFavorite(
             courseId = courseId,
